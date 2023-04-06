@@ -30,6 +30,8 @@ public class BootstrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        // Uncle Bob
         Author bob = new Author();
         bob.setFirstName("Robert");
         bob.setLastName("Martin");
@@ -83,9 +85,67 @@ public class BootstrapData implements CommandLineRunner {
         System.out.println("Author Count: " + this.authorRepository.count());
         System.out.println("Book Count: " + this.bookRepository.count());
         System.out.println("Publisher Count: " + this.publisherRepository.count());
+
+        // Terry Pratchett
+        Author terry = new Author();
+        terry.setFirstName("Terry");;
+        terry.setLastName("Pratchett");
+
+        Book colourMagic = new Book();
+        colourMagic.setTitle("Colour of Magic");
+        colourMagic.setIsbn("111-222-333");
+
+//        colourMagic.getAuthors().add(terry);
+
+        Book lightFantastic = new Book();
+        lightFantastic.setTitle("Light Fantastic");
+        lightFantastic.setIsbn("333-222-111");
+
+//        lightFantastic.getAuthors().add(terry);
+
+//        terry.getBooks().add(colourMagic);
+//        terry.getBooks().add(lightFantastic);
+
+        Publisher transWorld = new Publisher();
+        transWorld.setPublisherName("Transworld Publishers");
+        transWorld.setAddress("61-63 Uxbridge Road");
+        transWorld.setCity("London");
+
+//        colourMagic.setPublisher(transWorld);
+//        lightFantastic.setPublisher(transWorld);
+
+//        transWorld.getBooks().add(colourMagic);
+//        transWorld.getBooks().add(lightFantastic);
+
+        Author savedTerry = this.authorRepository.save(terry);
+        Book savedColour = this.bookRepository.save(colourMagic);
+        Book savedLight = this.bookRepository.save(lightFantastic);
+        Publisher savedTransWorld = this.publisherRepository.save(transWorld);
+
+        savedTerry.getBooks().add(savedColour);
+        savedTerry.getBooks().add(savedLight);
+
+        savedColour.getAuthors().add(savedTerry);
+        savedColour.setPublisher(savedTransWorld);
+        savedLight.getAuthors().add(savedTerry);
+        savedLight.setPublisher(savedTransWorld);
+
+        savedTransWorld.getBooks().add(savedColour);
+        savedTransWorld.getBooks().add(savedLight);
+
+        //Be Persistent!!
+        this.bookRepository.save(savedColour);
+        this.bookRepository.save(savedLight);
+        this.authorRepository.save(savedTerry);
+        this.publisherRepository.save(transWorld);
+
+        System.out.println("In Bootstrap");
+        System.out.println("Author Count: " + this.authorRepository.count());
+        System.out.println("Book Count: " + this.bookRepository.count());
+        System.out.println("Publisher Count: " + this.publisherRepository.count());
         // below println causes StackOverflowException - due to toString...
 //        System.out.println("Publisher BOoks: " + savedPrentice.getBooks().toString()); // this is null.  Why should we save it both ways?  Thought its linked with annotations.
-        System.out.println("Book Publisher: " + cleanCode.getPublisher());
+//        System.out.println("Book Publisher: " + savedCleanCode.getPublisher());
 
 
 
